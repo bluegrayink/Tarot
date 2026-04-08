@@ -1,109 +1,79 @@
 let cardsData = [
-  {
-    name: "The Beginning",
-    short: "awal baru dan peluang",
-    meaning: "Kamu sedang berada di awal baru. Ini saat yang tepat untuk mulai sesuatu."
-  },
-  {
-    name: "The Collapse",
-    short: "perubahan tiba-tiba",
-    meaning: "Ada sesuatu yang runtuh, tapi ini membuka jalan baru."
-  },
-  {
-    name: "The Choice",
-    short: "dilema keputusan",
-    meaning: "Kamu sedang di persimpangan dan harus memilih."
-  },
-  {
-    name: "The Growth",
-    short: "perkembangan stabil",
-    meaning: "Usaha kamu mulai menunjukkan hasil."
-  },
-  {
-    name: "The Shadow",
-    short: "ketakutan tersembunyi",
-    meaning: "Ada ketakutan yang mempengaruhi kamu."
-  },
-  {
-    name: "The Connection",
-    short: "hubungan dan relasi",
-    meaning: "Ada koneksi penting dalam hidup kamu."
-  },
-  {
-    name: "The Temptation",
-    short: "godaan dan distraksi",
-    meaning: "Hati-hati dengan hal yang mengalihkan fokus kamu."
-  },
-  {
-    name: "The Control",
-    short: "kendali dan disiplin",
-    meaning: "Kamu punya kendali lebih dari yang kamu kira."
-  },
-  {
-    name: "The Opportunity",
-    short: "kesempatan datang",
-    meaning: "Ada peluang yang harus segera kamu ambil."
-  },
-  {
-    name: "The Drift",
-    short: "kehilangan arah",
-    meaning: "Kamu sedang bingung arah hidup."
-  },
-  {
-    name: "The Passion",
-    short: "ambisi dan energi",
-    meaning: "Energi kamu sedang tinggi, gunakan dengan benar."
-  },
-  {
-    name: "The Illusion",
-    short: "tidak sesuai realita",
-    meaning: "Tidak semua yang terlihat itu benar."
-  },
-  {
-    name: "The Pause",
-    short: "berhenti sejenak",
-    meaning: "Ini saatnya istirahat dan refleksi."
-  },
-  {
-    name: "The Clarity",
-    short: "jawaban mulai jelas",
-    meaning: "Kamu mulai melihat arah yang benar."
-  },
-  {
-    name: "The Outcome",
-    short: "hasil akhir",
-    meaning: "Ini adalah hasil dari perjalanan kamu."
-  }
+  { name: "The Beginning", short: "awal baru dan peluang", meaning: "Kamu sedang berada di awal baru. Ini saat yang tepat untuk mulai sesuatu." },
+  { name: "The Collapse", short: "perubahan tiba-tiba", meaning: "Ada sesuatu yang runtuh, tapi ini membuka jalan baru." },
+  { name: "The Choice", short: "dilema keputusan", meaning: "Kamu sedang di persimpangan dan harus memilih." },
+  { name: "The Growth", short: "perkembangan stabil", meaning: "Usaha kamu mulai menunjukkan hasil." },
+  { name: "The Shadow", short: "ketakutan tersembunyi", meaning: "Ada ketakutan yang mempengaruhi kamu." },
+  { name: "The Connection", short: "hubungan dan relasi", meaning: "Ada koneksi penting dalam hidup kamu." },
+  { name: "The Temptation", short: "godaan dan distraksi", meaning: "Hati-hati dengan hal yang mengalihkan fokus kamu." },
+  { name: "The Control", short: "kendali dan disiplin", meaning: "Kamu punya kendali lebih dari yang kamu kira." },
+  { name: "The Opportunity", short: "kesempatan datang", meaning: "Ada peluang yang harus segera kamu ambil." },
+  { name: "The Drift", short: "kehilangan arah", meaning: "Kamu sedang bingung arah hidup." },
+  { name: "The Passion", short: "ambisi dan energi", meaning: "Energi kamu sedang tinggi, gunakan dengan benar." },
+  { name: "The Illusion", short: "tidak sesuai realita", meaning: "Tidak semua yang terlihat itu benar." },
+  { name: "The Pause", short: "berhenti sejenak", meaning: "Ini saatnya istirahat dan refleksi." },
+  { name: "The Clarity", short: "jawaban mulai jelas", meaning: "Kamu mulai melihat arah yang benar." },
+  { name: "The Outcome", short: "hasil akhir", meaning: "Ini adalah hasil dari perjalanan kamu." }
 ];
 
 let selectedCards = [];
 let mode = 0;
+let shuffledCards = [];
 
-renderAllCards();
+// RANDOM SHUFFLE (biar ga bisa ditebak)
+function shuffle(array) {
+  let arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
-// tampilkan semua kartu
+// render semua kartu
 function renderAllCards() {
   let area = document.getElementById("card-area");
   area.innerHTML = "";
 
-  cardsData.forEach((card) => {
+  shuffledCards = shuffle(cardsData);
+
+  let container = document.createElement("div");
+  container.className = "card-grid";
+
+  let row1 = document.createElement("div");
+  let row2 = document.createElement("div");
+  let row3 = document.createElement("div");
+
+  row1.className = "row";
+  row2.className = "row";
+  row3.className = "row";
+
+  shuffledCards.forEach((card, index) => {
     let div = document.createElement("div");
     div.className = "card";
 
     div.onclick = () => pickCard(div, card);
 
-    area.appendChild(div);
+    if (index < 5) row1.appendChild(div);
+    else if (index < 10) row2.appendChild(div);
+    else row3.appendChild(div);
   });
+
+  container.appendChild(row1);
+  container.appendChild(row2);
+  container.appendChild(row3);
+
+  area.appendChild(container);
 }
 
-// set mode
+// pilih mode
 function setMode(m) {
   mode = m;
   selectedCards = [];
 
   document.getElementById("result").innerHTML = "";
   document.getElementById("instruction").innerText =
-    `Pilih ${mode} kartu sekarang`;
+    `Pilih ${mode} kartu yang kamu rasakan paling menarik`;
 }
 
 // pilih kartu
@@ -139,7 +109,7 @@ function showResult() {
   `;
 }
 
-// narasi
+// narasi lebih natural
 function generateStory(cards) {
   let a = cards.map(c => c.short);
 
@@ -149,29 +119,34 @@ function generateStory(cards) {
 
   if (cards.length === 3) {
     return `
-    Dari pilihan kamu, ada pola yang cukup kuat.
+    Dari pilihan kamu, ada pola yang cukup menarik.
 
-    Awalnya kamu berada dalam kondisi ${a[0]}, yang ternyata masih berpengaruh sampai sekarang.
+    Awalnya kamu berada dalam kondisi ${a[0]}, yang tanpa disadari masih berpengaruh sampai sekarang.
 
-    Saat ini kamu sedang masuk ke fase ${a[1]}, dimana ada perubahan atau dinamika yang cukup terasa.
+    Saat ini kamu sedang berada dalam fase ${a[1]}, yang menunjukkan adanya perubahan atau dinamika dalam hidup kamu.
 
-    Kalau dilihat ke depan, arah ini cenderung akan berkembang menjadi ${a[2]}.
+    Jika dilihat ke depan, arah ini kemungkinan besar akan berkembang menjadi ${a[2]}.
 
-    Semua ini bukan kebetulan, tapi proses yang memang sedang kamu jalani.
+    Semua ini bukan kebetulan, tapi bagian dari proses yang sedang kamu jalani.
     `;
   }
 
   if (cards.length === 5) {
     return `
-    Situasi kamu sekarang cukup kompleks.
+    Dari kartu yang kamu pilih, terlihat bahwa situasi kamu saat ini cukup kompleks.
 
-    Kamu sedang berada dalam kondisi ${a[0]}, tapi juga harus menghadapi ${a[1]}.
+    Kamu sedang berada dalam kondisi ${a[0]}, namun juga dihadapkan dengan ${a[1]}.
 
-    Tanpa kamu sadari, ada faktor ${a[2]} yang ikut mempengaruhi arah kamu.
+    Menariknya, ada faktor tersembunyi yaitu ${a[2]}, yang mungkin belum sepenuhnya kamu sadari.
 
-    Pendekatan terbaik untuk kamu sekarang adalah ${a[3]}.
+    Untuk menghadapi ini, pendekatan terbaik adalah ${a[3]}.
 
-    Jika dijalani dengan konsisten, kemungkinan besar akan menuju ${a[4]}.
+    Jika kamu bisa menjalani proses ini dengan baik, kemungkinan besar semuanya akan mengarah ke ${a[4]}.
+
+    Ini bukan sesuatu yang instan, tapi proses yang perlahan akan membentuk hasil akhirnya.
     `;
   }
 }
+
+// INIT
+renderAllCards();
