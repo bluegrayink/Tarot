@@ -1,22 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Tarot Reading</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+body {
+  font-family: Arial;
+  background: #0f0f1a;
+  color: white;
+  text-align: center;
+}
 
-  <div class="container">
-    <h1>🔮 Tarot Reading</h1>
+.container {
+  margin-top: 40px;
+}
 
-    <button onclick="drawCard(1)">Draw 1 Card (Free)</button>
-    <button onclick="drawCard(3)">Draw 3 Cards (50K)</button>
-    <button onclick="drawCard(5)">Draw 5 Cards (100K)</button>
+button {
+  margin: 10px;
+  padding: 10px 18px;
+  background: #6c5ce7;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-    <div id="result"></div>
-  </div>
+#card-area {
+  margin-top: 30px;
+}
 
-  <script src="script.js"></script>
-</body>
-</html>
+.card-back {
+  width: 120px;
+  height: 180px;
+  background: linear-gradient(135deg, #2c2c54, #1e1e2f);
+  border-radius: 10px;
+  display: inline-block;
+  margin: 10px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.6s;
+}
+
+.card-back:hover {
+  transform: scale(1.05);
+}
+
+.flip {
+  transform: rotateY(180deg) rotate(360deg);
+}
+
+.result-card {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #444;
+  border-radius: 10px;
+}
