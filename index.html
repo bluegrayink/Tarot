@@ -8,12 +8,13 @@
 <body>
 
   <div class="container">
-    <h1>🔮 Tarot Reading</h1>
+    <h1>🔮 Choose Your Card</h1>
 
-    <button onclick="drawCard(1)">Draw 1 Card (Free)</button>
-    <button onclick="drawCard(3)">Draw 3 Cards (50K)</button>
-    <button onclick="drawCard(5)">Draw 5 Cards (100K)</button>
+    <button onclick="startDraw(1)">1 Card</button>
+    <button onclick="startDraw(3)">3 Cards</button>
+    <button onclick="startDraw(5)">5 Cards</button>
 
+    <div id="card-area"></div>
     <div id="result"></div>
   </div>
 
