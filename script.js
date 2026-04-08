@@ -20,7 +20,7 @@ let selectedCards = [];
 let mode = 0;
 let shuffledCards = [];
 
-// RANDOM SHUFFLE (biar ga bisa ditebak)
+// shuffle random (lebih proper)
 function shuffle(array) {
   let arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -30,7 +30,7 @@ function shuffle(array) {
   return arr;
 }
 
-// render semua kartu
+// render kartu
 function renderAllCards() {
   let area = document.getElementById("card-area");
   area.innerHTML = "";
@@ -109,42 +109,54 @@ function showResult() {
   `;
 }
 
-// narasi lebih natural
+// generate narasi
 function generateStory(cards) {
   let a = cards.map(c => c.short);
 
+  let endings = [
+    "Coba kamu pikir lagi, ini relate ga sama kondisi kamu sekarang?",
+    "Biasanya ini kejadian tanpa disadari.",
+    "Ini sering terjadi di fase seperti ini.",
+    "Ga semua orang sadar mereka ada di posisi ini."
+  ];
+
+  let ending = endings[Math.floor(Math.random() * endings.length)];
+
+  // 1 kartu
   if (cards.length === 1) {
-    return cards[0].meaning;
+    return cards[0].meaning + "<br><br>" + ending;
   }
 
+  // 3 kartu
   if (cards.length === 3) {
-    return `
-    Dari pilihan kamu, ada pola yang cukup menarik.
+    let templates = [
+      `Kamu lagi berada di fase ${a[1]}, dan ini sebenarnya berkaitan dengan ${a[0]}. Kalau berlanjut, ini bisa mengarah ke ${a[2]}.`,
+      
+      `Kalau dilihat dari pilihan kamu, ${a[0]} masih kebawa sampai sekarang. Saat ini kamu di kondisi ${a[1]}, dan ini bisa berkembang jadi ${a[2]}.`,
+      
+      `Pilihan kamu menunjukkan bahwa ${a[0]} belum selesai, dan sekarang berubah jadi ${a[1]}. Kalau terus seperti ini, hasilnya bisa ${a[2]}.`,
+      
+      `Situasi kamu sekarang cukup jelas. Dari ${a[0]} ke ${a[1]}, dan kemungkinan akan menuju ${a[2]}.`,
+      
+      `Ada sesuatu dari ${a[0]} yang muncul lagi sekarang dalam bentuk ${a[1]}. Arah ini bisa berakhir di ${a[2]}.`
+    ];
 
-    Awalnya kamu berada dalam kondisi ${a[0]}, yang tanpa disadari masih berpengaruh sampai sekarang.
-
-    Saat ini kamu sedang berada dalam fase ${a[1]}, yang menunjukkan adanya perubahan atau dinamika dalam hidup kamu.
-
-    Jika dilihat ke depan, arah ini kemungkinan besar akan berkembang menjadi ${a[2]}.
-
-    Semua ini bukan kebetulan, tapi bagian dari proses yang sedang kamu jalani.
-    `;
+    let text = templates[Math.floor(Math.random() * templates.length)];
+    return text + "<br><br>" + ending;
   }
 
+  // 5 kartu
   if (cards.length === 5) {
-    return `
-    Dari kartu yang kamu pilih, terlihat bahwa situasi kamu saat ini cukup kompleks.
+    let templates = [
+      `Situasi kamu sekarang berada di ${a[0]}, tapi ada tantangan berupa ${a[1]}. Yang sering ga disadari adalah ${a[2]}. Kalau kamu bisa menghadapi ini dengan ${a[3]}, hasilnya bisa menuju ${a[4]}.`,
+      
+      `Kondisi kamu sekarang cukup kompleks. ${a[0]} jadi dasar, tapi ${a[1]} bikin semuanya ga stabil. Ada juga ${a[2]} yang diam-diam berpengaruh. Cara terbaik adalah ${a[3]}, supaya arah akhirnya bisa ${a[4]}.`,
+      
+      `Dari yang terlihat, kamu lagi di fase ${a[0]}. Tapi sebenarnya masalahnya ada di ${a[1]}. Ditambah lagi ${a[2]} yang bikin makin rumit. Kalau kamu ambil langkah ${a[3]}, hasilnya bisa berubah ke ${a[4]}.`
+    ];
 
-    Kamu sedang berada dalam kondisi ${a[0]}, namun juga dihadapkan dengan ${a[1]}.
-
-    Menariknya, ada faktor tersembunyi yaitu ${a[2]}, yang mungkin belum sepenuhnya kamu sadari.
-
-    Untuk menghadapi ini, pendekatan terbaik adalah ${a[3]}.
-
-    Jika kamu bisa menjalani proses ini dengan baik, kemungkinan besar semuanya akan mengarah ke ${a[4]}.
-
-    Ini bukan sesuatu yang instan, tapi proses yang perlahan akan membentuk hasil akhirnya.
-    `;
+    let text = templates[Math.floor(Math.random() * templates.length)];
+    return text + "<br><br>" + ending;
   }
 }
 
