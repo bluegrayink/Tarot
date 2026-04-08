@@ -8,11 +8,15 @@
 <body>
 
   <div class="container">
-    <h1>🔮 Choose Your Card</h1>
+    <h1>🔮 Choose Your Cards</h1>
 
-    <button onclick="startDraw(1)">1 Card</button>
-    <button onclick="startDraw(3)">3 Cards</button>
-    <button onclick="startDraw(5)">5 Cards</button>
+    <div class="controls">
+      <button onclick="setMode(1)">1 Card</button>
+      <button onclick="setMode(3)">3 Cards</button>
+      <button onclick="setMode(5)">5 Cards</button>
+    </div>
+
+    <p id="instruction">Pilih mode dulu untuk mulai 🔮</p>
 
     <div id="card-area"></div>
     <div id="result"></div>
