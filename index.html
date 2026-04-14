@@ -1,24 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <title>Tarot Reading</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-
   <div class="container">
-    <h1>🔮 Choose Your Cards</h1>
+    <h1>🔮 Tarot Reading</h1>
 
-    <div class="controls">
-      <button onclick="setMode(1)">1 Card</button>
-      <button onclick="setMode(3)">3 Cards</button>
-      <button onclick="setMode(5)">5 Cards</button>
-    </div>
+    <input id="username" placeholder="Masukkan nama kamu..." />
+    <br><br>
 
-    <p id="instruction">Pilih mode dulu untuk mulai 🔮</p>
+    <select id="category">
+      <option value="love">Love</option>
+      <option value="career">Career</option>
+      <option value="life">Life</option>
+    </select>
+
+    <br><br>
+
+    <button onclick="setMode(3, 'free')">Free (3 Cards)</button>
+    <button onclick="setMode(5, 'paid5')">5 Cards (Rp5.000)</button>
+    <button onclick="setMode(7, 'paid10')">7 Cards (Rp10.000)</button>
+
+    <p id="instruction">Pilih mode dulu untuk mulai</p>
 
     <div id="card-area"></div>
+
     <div id="result"></div>
   </div>
 
