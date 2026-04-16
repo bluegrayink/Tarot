@@ -4,32 +4,28 @@ export default async function handler(req, res) {
       return res.status(405).json({ message: "Method not allowed" });
     }
 
-    // 🔥 FIX PENTING: parse body manual
-    let body = req.body;
+    const { name, category, cards } = req.body || {};
 
-    if (!body) {
-      body = await new Promise((resolve) => {
-        let data = "";
-        req.on("data", chunk => data += chunk);
-        req.on("end", () => resolve(JSON.parse(data)));
+    if (!cards || !Array.isArray(cards)) {
+      return res.status(400).json({ error: "Cards tidak valid" });
+    }
+
+    // 🔥 CEK API KEY
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({
+        error: "API KEY tidak terbaca di server"
       });
     }
 
-    const { name, category, cards } = body;
-
-    if (!cards) {
-      return res.status(400).json({ error: "Cards tidak ada" });
-    }
-
     const prompt = `
-Kamu adalah pembaca tarot profesional dan terbaik di bidangnya.
+Kamu adalah pembaca tarot profesional.
 
 Nama: ${name}
 Kategori: ${category}
 Kartu:
 ${cards.map(c => c.name + " (" + c.short + ")").join(", ")}
 
-Buat pembacaan tarot yang santai, natural, dan terasa personal.
+Buat pembacaan tarot yang natural, santai, dan terasa personal.
 `;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -48,12 +44,22 @@ Buat pembacaan tarot yang santai, natural, dan terasa personal.
 
     const data = await response.json();
 
+    // 🔥 DEBUG OUTPUT
+    console.log("OPENAI RESPONSE:", data);
+
+    if (!response.ok) {
+      return res.status(500).json({
+        error: "OpenAI error",
+        detail: data
+      });
+    }
+
     return res.status(200).json({
       result: data.choices?.[0]?.message?.content || "Gagal generate"
     });
 
   } catch (err) {
-    console.error("ERROR:", err);
+    console.error("SERVER ERROR:", err);
     return res.status(500).json({
       error: err.toString()
     });
