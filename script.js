@@ -20,6 +20,9 @@ let selectedCards = [];
 let mode = 0;
 let shuffledCards = [];
 
+// 🔥 GANTI KE DOMAIN VERCEL KAMU
+const API_URL = "https://tarot-virid-seven.vercel.app/api/tarot";
+
 function shuffle(array) {
   let arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -79,7 +82,7 @@ function pickCard(div, card) {
   }
 }
 
-// 🔥 INI BAGIAN AI
+// 🔥 FIX TOTAL AI REQUEST
 async function showResult() {
   let name = document.getElementById("username").value || "Kamu";
   let category = document.getElementById("category").value;
@@ -89,7 +92,7 @@ async function showResult() {
   resultDiv.innerHTML = "🔮 Membaca energi kamu...";
 
   try {
-    let res = await fetch("/api/tarot", {
+    let res = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -101,7 +104,25 @@ async function showResult() {
       })
     });
 
-    let data = await res.json();
+    // 🔥 HANDLE RESPONSE AMAN
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error("Response bukan JSON");
+    }
+
+    if (!res.ok) {
+      console.error("API ERROR:", data);
+      resultDiv.innerHTML = "⚠️ Server error, cek logs";
+      return;
+    }
+
+    if (!data.result) {
+      console.error("EMPTY RESULT:", data);
+      resultDiv.innerHTML = "⚠️ AI tidak mengembalikan hasil";
+      return;
+    }
 
     resultDiv.innerHTML = `
       <div class="result-card">
@@ -109,8 +130,10 @@ async function showResult() {
         <p>${data.result}</p>
       </div>
     `;
-  } catch {
-    resultDiv.innerHTML = "⚠️ Gagal ambil hasil";
+
+  } catch (err) {
+    console.error("FETCH ERROR:", err);
+    resultDiv.innerHTML = "⚠️ Gagal koneksi ke server";
   }
 }
 
