@@ -10,42 +10,34 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Cards tidak valid" });
     }
 
-    // 🔥 CEK API KEY
-    if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({
-        error: "API KEY tidak terbaca di server"
-      });
-    }
+    // 🔥 DEBUG ENV
+    console.log("API KEY ADA?", !!process.env.OPENAI_API_KEY);
 
     const prompt = `
-Kamu adalah pembaca tarot profesional.
-
 Nama: ${name}
 Kategori: ${category}
 Kartu:
 ${cards.map(c => c.name + " (" + c.short + ")").join(", ")}
 
-Buat pembacaan tarot yang natural, santai, dan terasa personal.
+Buat pembacaan tarot yang santai, natural, dan tidak kaku.
 `;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    // 🔥 PAKAI API BARU (LEBIH STABIL)
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "user", content: prompt }
-        ]
+        model: "gpt-4.1-mini",
+        input: prompt
       })
     });
 
     const data = await response.json();
 
-    // 🔥 DEBUG OUTPUT
-    console.log("OPENAI RESPONSE:", data);
+    console.log("OPENAI RAW:", JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       return res.status(500).json({
@@ -54,14 +46,26 @@ Buat pembacaan tarot yang natural, santai, dan terasa personal.
       });
     }
 
-    return res.status(200).json({
-      result: data.choices?.[0]?.message?.content || "Gagal generate"
-    });
+    // 🔥 AMBIL TEXT DENGAN AMAN
+    let result = "";
+
+    if (data.output && data.output[0]?.content) {
+      result = data.output[0].content[0].text;
+    }
+
+    if (!result) {
+      return res.status(500).json({
+        error: "AI tidak mengembalikan teks",
+        raw: data
+      });
+    }
+
+    return res.status(200).json({ result });
 
   } catch (err) {
     console.error("SERVER ERROR:", err);
     return res.status(500).json({
-      error: err.toString()
+      error: err.message || "Unknown error"
     });
   }
 }
